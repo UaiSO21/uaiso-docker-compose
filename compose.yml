@@ -5,7 +5,7 @@ services:
     image: traefik:v3.0
     container_name: "traefik"
     networks:
-      - web
+      - traefik
     ports:
       - "80:80" # HTTP
       - "443:443" # HTTPS
@@ -19,7 +19,7 @@ services:
       # Docker configuration
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker.network=web"
+      - "--providers.docker.network=traefik"
       # Configure entrypoint
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
@@ -47,7 +47,7 @@ services:
     image: portainer/portainer-ce
     container_name: "portainer"
     networks:
-      - web
+      - traefik
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
@@ -60,6 +60,6 @@ services:
     restart: unless-stopped
 
 networks:
-  web:
+  traefik:
     external:
-      name: web
+      name: traefik
